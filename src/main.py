@@ -1,19 +1,26 @@
-from window import Window, Point, Line
+from maze_parts import Window, Point, Line
+from cell import Cell
 
 def main():
     win = Window(800, 600)
 
-    p1 = Point(0, 0)
-    p2 = Point(100, 100)
-    p3 = Point(0, 300)
-    p4 = Point(800, 300)
+    c = Cell(win)
 
-    line_to_draw = Line(p1, p2)
-    line2 = Line(p3,p4)
+    c.draw(50, 50, 100, 100)
 
-    win.draw_line(line_to_draw, "red")
-    win.draw_line(line2, "blue")
+    c = Cell(win)
+    c.has_right_wall = False
+    c.draw(125, 125, 200, 200)
+
+    c = Cell(win)
+    c.has_bottom_wall = False
+    c.draw(225, 225, 250, 250)
+
+    c = Cell(win)
+    c.has_top_wall = False
+    c.draw(300, 300, 500, 500)
 
     win.wait_for_close()
 
-main()
+if __name__ == "__main__":
+    main()
