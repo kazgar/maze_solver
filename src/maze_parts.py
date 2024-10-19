@@ -6,7 +6,7 @@ class Window:
         self.height = height
         self.__root = Tk()
         self.__root.title("Kazik's Maze Solver")
-        self.__canvas = Canvas(self.__root, height=self.height, width=self.width)
+        self.__canvas = Canvas(self.__root, height=self.height, width=self.width, background="white")
         self.__canvas.pack(fill=BOTH, expand=1)
         self.__is_running = False
         self.__root.protocol("WM_DELETE_WINDOW", self.close)
