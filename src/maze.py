@@ -10,7 +10,7 @@ class Maze:
             num_cols,
             cell_size_x,
             cell_size_y,
-            win
+            win=None
     ):
         self._x1 = x1
         self._y1 = y1
@@ -23,6 +23,8 @@ class Maze:
         self._create_cells()
     
     def _create_cells(self):
+        if self._num_rows < 1 or self._num_cols < 1:
+            raise ValueError("number of rows and number of columns have to be at least 1")
         for i in range(self._num_cols):
             self._cells.append([])
             for j in range(self._num_rows):
