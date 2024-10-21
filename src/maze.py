@@ -102,12 +102,44 @@ class Maze:
             for cell in column:
                 cell._visited = False
 
-    '''
     def solve(self):
         return self._solve_r(0, 0)
 
     def _solve_r(self, i, j):
         self._animate()
-        visited_cells = []
-        pass
-    '''
+        self._cells[i][j]._visited = True
+        if i == self._num_cols - 1 and j == self._num_cols - 1:
+            return True
+        directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+        for di, dj in directions:
+            ni, nj = i + di, j + dj
+            if (0 <= ni < self._num_cols and 
+                0 <= nj < self._num_rows and 
+                self._cells[ni][nj]._visited == False and
+                self._wall_between((i, j), (ni, nj)) == False
+                ):
+                self._cells[i][j].draw_move(self._cells[ni][nj])
+                if self._solve_r(ni, nj) == True:
+                    return True
+                else:
+                    self._cells[i][j].draw_move(self._cells[ni][nj], undo=True)
+        return False
+    
+    def _wall_between(self, cell1, cell2):
+        i, j = cell1
+        ni, nj = cell2
+        if ni > i:
+            if self._cells[i][j].has_bottom_wall == False and self._cells[ni][nj].has_top_wall == False:
+                return False
+        elif ni < i:
+            if self._cells[i][j].has_top_wall == False and self._cells[ni][nj].has_bottom_wall == False:
+                return False
+        elif nj > j:
+            if self._cells[i][j].has_right_wall == False and self._cells[ni][nj].has_left_wall == False:
+                return False
+        else:
+            if self._cells[i][j].has_left_wall == False and self._cells[ni][nj].has_right_wall == False:
+                return False
+        return True
+                
+        
