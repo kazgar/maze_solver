@@ -27,6 +27,7 @@ class Maze:
         self._create_cells()
         self._break_entrance_and_exit()
         self._break_walls(0, 0)
+        self._reset_cells_visited()
        
     def _create_cells(self):
         if self._num_rows < 1 or self._num_cols < 1:
@@ -55,7 +56,7 @@ class Maze:
         if self._win is None:
             return
         self._win.redraw()
-        time.sleep(0.005)
+        time.sleep(0.05)
     
     def _break_entrance_and_exit(self):
         self._cells[0][0].has_top_wall = False
@@ -66,31 +67,47 @@ class Maze:
         
     def _break_walls(self, i, j):
         self._cells[i][j]._visited = True
-        directions = [(0, -1), (0, 1), (-1, 0), (1, 0)]
+        directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
         while True:
-            to_visit = []
+            neighbors = []
             for di, dj in directions:
                 ni, nj = i + di, j + dj
-                if 0 <= ni < self._num_cols and 0 <= nj < self._num_rows and not self._cells[ni][nj]._visited:
-                    to_visit.append((ni, nj))
+                if 0 <= ni < self._num_cols and 0 <= nj < self._num_rows and self._cells[ni][nj]._visited == False:
+                    neighbors.append((ni, nj))
 
-            if not to_visit:
+            if not neighbors:
                 self._draw_cell(i, j)
                 return
             
-            ni, nj = random.choice(to_visit)
-            if ni > i:
-                self._cells[i][j].has_right_wall = False
-                self._cells[ni][nj].has_left_wall = False
-            elif ni < i:
-                self._cells[i][j].has_left_wall = False
-                self._cells[ni][nj].has_right_wall = False
-            elif nj > j:
-                self._cells[i][j].has_bottom_wall = False
-                self._cells[ni][nj].has_top_wall = False
-            else:
-                self._cells[i][j].has_top_wall = False
-                self._cells[ni][nj].has_bottom_wall = False
+            i2, j2 = random.choice(neighbors)
             
-            self._break_walls(ni, nj)
+            if i2 > i:
+                self._cells[i][j].has_bottom_wall = False
+                self._cells[i2][j2].has_top_wall = False
+            elif i2 < i:
+                self._cells[i][j].has_top_wall = False
+                self._cells[i2][j2].has_bottom_wall = False
+            elif j2 > j:
+                self._cells[i][j].has_right_wall = False
+                self._cells[i2][j2].has_left_wall = False
+            else:
+                self._cells[i][j].has_left_wall = False
+                self._cells[i2][j2].has_right_wall = False
+            
+            self._break_walls(i2, j2)
+            
 
+    def _reset_cells_visited(self):
+        for column in self._cells:
+            for cell in column:
+                cell._visited = False
+
+    '''
+    def solve(self):
+        return self._solve_r(0, 0)
+
+    def _solve_r(self, i, j):
+        self._animate()
+        visited_cells = []
+        pass
+    '''
